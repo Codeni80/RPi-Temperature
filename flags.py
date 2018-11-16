@@ -24,7 +24,7 @@ def setFlags(temp0, temp1):
 		flag0 = "Probe 1 temperature is dangerously high!" 
 	else:
 		#Temp0 is good
-		flag0 = "Probe 1 temperature is at optimal."
+		flag0 = "Probe 1 temperature is optimal."
 		
 	if temp1 > 70 and temp1 < 75:
 		#Temp1 is safe, but slightly high
@@ -37,7 +37,7 @@ def setFlags(temp0, temp1):
 		flag1 = "Probe 2 temperature is dangerously high!"
 	else:
 		#Temp1 is good
-		flag1 = "Probe 2 temperature is at optimal."
+		flag1 = "Probe 2 temperature is optimal."
 		
 	flags = []
 	flags.append(flag0)
