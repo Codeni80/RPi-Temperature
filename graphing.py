@@ -11,50 +11,29 @@ def alertCheck(temp0, temp1, time):
 	result = flags.setFlags(temp0, temp1)
 	flag0 = result[0]
 	flag1 = result[1]
+	
+	tempComment = "Probe 1 temperature is - {0}  Probe 2 temperature is - {1}".format(temp0, temp1)
+	#Opening log file
 	f = open("log/temp.log", "a")
+	#All f.writes are written to the log file to help us ensure that we have backup copies of our temperature
+	#data to allow us to access recorded temperatures if something happens to our graphs, or to check for excessive
+	#lengths of high temperatures if they are far enough in the past to no longer be shown on the graph itself
+	#(basically the log file is for historical data)
 	f.write("Date/Time of run: {0}\n".format(time))
-	if flag0 == True and flag1 == True:
-		#Both temps are too high
-		f.write("******ALERT******\n")
-		f.write("Temp0: {0} \t Temp1: {1}\n".format(temp0, temp1))
-		alertComment = "*****ALERT*****"
-		messageComment = "Both probes temperatures are too high!"
-		tempComment = "Probe 1 - {0}\tProbe 2 - {1}".format(temp0, temp1)
-		createGraph(alertComment, messageComment, tempComment)
-	elif flag0 == False and flag1 == False:
-		#Both temps are good temperature
-		f.write("Temp0: {0} \t Temp1: {1}\n".format(temp0, temp1))
-		alertComment = "   "
-		messageComment = "Both probes are at a safe temperature"
-		tempComment = "Probe 1 - {0}\tProbe 2 - {1}".format(temp0, temp1)
-		createGraph(alertComment, messageComment, tempComment)
-	elif flag0 == True and flag1 == False:
-		#Temp0 is too high, Temp1 is fine.
-		f.write("***ALERT*** Temp0: {0} \t Temp1: {1}\n".format(temp0, temp1))
-		alertComment = "***ALERT***"
-		messageComment = "Probe 1 temperature is too high!"
-		tempComment = "Probe 1 - {0}\tProbe 2 - {1}".format(temp0, temp1)
-		createGraph(alertComment, messageComment, tempComment)
-	elif flag0 == False and flag1 == True:
-		#Temp1 is too high, Temp0 is fine.
-		f.write("Temp0: {0} \t ***ALERT*** Temp1: {1}\n".format(temp0, temp1))
-		alertComment = "***ALERT***"
-		messageComment = "Probe 2 temperature is too high!"
-		tempComment = "Probe 1 - {0}\tProbe 2 - {1}".format(temp0, temp1)
-		createGraph(alertComment, messageComment, tempComment)
-	#Closing log file
+	f.write(tempComment)
+	createGraph(flag0, flag1, tempComment)
 	f.close()
 		
-def createGraph(alertComment, messageComment, tempComment):
+def createGraph(p1Comment, p2Comment, tempComment):
 	#Hourly Graph
 	ret = rrdtool.graph("temp_hourly.png", "--start"," -4h", "--vertical-label=Degrees F",
 						"DEF:temp0=temperature.rrd:temp0:AVERAGE",
 						"LINE2:temp0{0}:Probe 1 [deg F]".format(OUTTEMP_COLOR),
 						"DEF:temp1=temperature.rrd:temp1:AVERAGE",
-						"LINE2:temp1{0}:Probe 2 [def F]".format(INTEMP_COLOR),
+						"LINE2:temp1{0}:Probe 2 [deg F]".format(INTEMP_COLOR),
 						"COMMENT:  ",
-						"COMMENT: {0}".format(alertComment),
-						"COMMENT: {0}".format(messageComment),
+						"COMMENT: {0}".format(p1Comment),
+						"COMMENT: {0}".format(p2Comment),
 						"COMMENT: {0}".format(tempComment))
 
 	#Daily Graph
@@ -62,28 +41,28 @@ def createGraph(alertComment, messageComment, tempComment):
 						"DEF:temp0=temperature.rrd:temp0:AVERAGE",
 						"LINE2:temp0{0}:Probe 1 [deg F]".format(OUTTEMP_COLOR),
 						"DEF:temp1=temperature.rrd:temp1:AVERAGE",
-						"LINE2:temp1{0}:Probe 2 [def F]".format(INTEMP_COLOR))
+						"LINE2:temp1{0}:Probe 2 [deg F]".format(INTEMP_COLOR))
 						
 	#Weekly Graph
 	ret = rrdtool.graph("temp_weekly.png", "--start", "-1w", "--vertical-label=Degrees F",
 						"DEF:temp0=temperature.rrd:temp0:AVERAGE",
 						"LINE2:temp0{0}:Probe 1 [deg F]".format(OUTTEMP_COLOR),
 						"DEF:temp1=temperature.rrd:temp1:AVERAGE",
-						"LINE2:temp1{0}:Probe 2 [def F]".format(INTEMP_COLOR))
+						"LINE2:temp1{0}:Probe 2 [deg F]".format(INTEMP_COLOR))
 						
 	#Monthly Graph
 	ret = rrdtool.graph("temp_monthly.png", "--start", "-1m", "--vertical-label=Degrees F",
 						"DEF:temp0=temperature.rrd:temp0:AVERAGE",
 						"LINE2:temp0{0}:Probe 1 [deg F]".format(OUTTEMP_COLOR),
 						"DEF:temp1=temperature.rrd:temp1:AVERAGE",
-						"LINE2:temp1{0}:Probe 2 [def F]".format(INTEMP_COLOR))
+						"LINE2:temp1{0}:Probe 2 [deg F]".format(INTEMP_COLOR))
 						
 	#Yearly Graph
 	ret = rrdtool.graph("temp_yearly.png", "--start", "-1yh", "--vertical-label=Degrees F",
 						"DEF:temp0=temperature.rrd:temp0:AVERAGE",
 						"LINE2:temp0{0}:Probe 1 [deg F]".format(OUTTEMP_COLOR),
 						"DEF:temp1=temperature.rrd:temp1:AVERAGE",
-						"LINE2:temp1{0}:Probe 2 [def F]".format(INTEMP_COLOR))
+						"LINE2:temp1{0}:Probe 2 [deg F]".format(INTEMP_COLOR))
 						
 def copyGraph():
 	#Send a copy of the graphs to /var/www/html/ to be displayed on the webpage
