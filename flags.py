@@ -1,16 +1,4 @@
-# def setFlags(temp0, temp1):
-	# if temp0 > 75:
-		# flag0 = True
-	# else:
-		# flag0 = False
-	# if temp1 > 75:
-		# flag1 = True
-	# else:
-		# flag1 = False
-	# flags = []
-	# flags.append(flag0)
-	# flags.append(flag1)
-	# return flags
+import rrdtool
 	
 def setFlags(temp0, temp1):
 	if temp0 > 70 and temp0 < 75:
@@ -43,3 +31,40 @@ def setFlags(temp0, temp1):
 	flags.append(flag0)
 	flags.append(flag1)
 	return flags
+	
+def average(time):
+	if time == 0:
+		#Hourly
+		start = "-1h"
+	elif time == 1:
+		#Daily
+		start = "-1d"
+	elif time == 2:
+		#Weekly
+		start = "-1w"
+	elif time == 3:
+		#Monthly
+		start = "-1m"
+	elif time == 4:
+		#Yearly
+		start = "-1y"
+	else:
+		#Error
+		return("Error - time was not sent properly")
+	temps = rrdtool.fetch("temperature.rrd", "--start={0}".format(start), "AVERAGE")
+	rows = temps[2]
+	count = 0
+	total = 0
+	total2 = 0
+	for item in rows:
+		if item[0] is not None:
+			total += item[0]
+			count += 1
+		if item[1] is not None:
+			total2 += item[1]
+	average1 = total / count
+	average1 = '{0:.6g}'.format(average1)
+	average2 = total2 / count
+	average2 = '{0:.6g}'.format(average2)
+	average = "Probe 1\: {0} Probe 2\: {1}".format(average1, average2)
+	return(average)

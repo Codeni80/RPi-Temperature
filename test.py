@@ -19,6 +19,7 @@ while (attempts < 5):
 	temp1 = temp1/1000 #C
 	temp1 = temp1 * (9/5) + 32 #F
 
+
 	#Read information about first sensor & close sensor
 	data2 = temp2Store.read()
 
@@ -36,7 +37,7 @@ while (attempts < 5):
 	ret = rrdtool.update('temperature.rrd',"N:{0}:{1}".format(temp1, temp2))
 	print(rrdtool.lastupdate("temperature.rrd"))
 	result = rrdtool.lastupdate("temperature.rrd")
-
+	
 	#Pulling the latest time, and temps from the rrd file
 	time = result['date']
 	temp0 = result['ds']['temp0']
