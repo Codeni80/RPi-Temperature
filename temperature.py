@@ -1,6 +1,7 @@
 import sys, time, rrdtool, shutil, re, os
+from datetime import datetime
 import RPi.GPIO as GPIO
-import flags, graphing
+import flags, graphing, sms
 
 temp1 = 0
 temp0 = 0
@@ -53,3 +54,16 @@ graphing.alertCheck(temp0, temp1, time)
 
 #Copying locally created graphs to the /var/www/html folder to be displayed on the webpage
 graphing.copyGraph()
+
+temp0 = float(temp0)
+temp1 = float(temp1)
+checkLastSms = sms.check_sms_log(time)
+if(checkLastSms >= 1):
+	if temp0 > 70:
+		temps = sms.format_sms(temp0, temp1)
+		sms.send_sms(temps)
+		sms.log_sms(time)
+	elif temp1 > 70:
+		temps = sms.format_sms(temp0, temp1)
+		sms.send_sms(temps)
+		sms.log_sms(time)
