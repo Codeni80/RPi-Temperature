@@ -72,8 +72,8 @@ def createGraph(p1Comment, p2Comment, tempComment):
 						
 def copyGraph():
 	#Send a copy of the graphs to /var/www/html/ to be displayed on the webpage
-	shutil.copy2('/home/pi/test-stuff/python/temp_hourly.png', '/var/www/html/temp_hourly1.png')
-	shutil.copy2('/home/pi/test-stuff/python/temp_daily.png', '/var/www/html/temp_daily1.png')
-	shutil.copy2('/home/pi/test-stuff/python/temp_weekly.png', '/var/www/html/temp_weekly1.png')
-	shutil.copy2('/home/pi/test-stuff/python/temp_monthly.png', '/var/www/html/temp_monthly1.png')
-	shutil.copy2('/home/pi/test-stuff/python/temp_yearly.png', '/var/www/html/temp_yearly1.png')
+	shutil.copy2('/home/pi/pitemp/temp_hourly.png', '/var/www/html/temp_hourly1.png')
+	shutil.copy2('/home/pi/pitemp/temp_daily.png', '/var/www/html/temp_daily1.png')
+	shutil.copy2('/home/pi/pitemp/temp_weekly.png', '/var/www/html/temp_weekly1.png')
+	shutil.copy2('/home/pi/pitemp/temp_monthly.png', '/var/www/html/temp_monthly1.png')
+	shutil.copy2('/home/pi/pitemp/temp_yearly.png', '/var/www/html/temp_yearly1.png')
