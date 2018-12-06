@@ -1,6 +1,6 @@
 import rrdtool
 import shutil, re, os
-import flags
+import flags, sms
 
 
 INTEMP_COLOR = "#CC0000"
@@ -14,16 +14,19 @@ def alertCheck(temp0, temp1, time):
 	
 	tempComment = "Probe 1 temperature is - {0}  Probe 2 temperature is - {1}".format(temp0, temp1)
 	#Opening log file
-	f = open("log/temp.log", "a")
-	#All f.writes are written to the log file to help us ensure that we have backup copies of our temperature
-	#data to allow us to access recorded temperatures if something happens to our graphs, or to check for excessive
-	#lengths of high temperatures if they are far enough in the past to no longer be shown on the graph itself
-	#(basically the log file is for historical data)
-	f.write("Date/Time of run: {0}\n".format(time))
-	f.write(tempComment)
-	f.write("\n")
-	createGraph(flag0, flag1, tempComment)
-	f.close()
+	try:
+		f = open("log/temp.log", "a")
+		#All f.writes are written to the log file to help us ensure that we have backup copies of our temperature
+		#data to allow us to access recorded temperatures if something happens to our graphs, or to check for excessive
+		#lengths of high temperatures if they are far enough in the past to no longer be shown on the graph itself
+		#(basically the log file is for historical data)
+		f.write("Date/Time of run: {0}\n".format(time))
+		f.write(tempComment)
+		f.write("\n")
+		createGraph(flag0, flag1, tempComment)
+		f.close()
+	except IOError:
+		sms.file_error_sms(3)
 		
 def createGraph(p1Comment, p2Comment, tempComment):
 	#Hourly Graph
