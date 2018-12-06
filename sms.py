@@ -6,7 +6,7 @@ def send_sms(temps):
 	report = {}
 	report["value1"] = temps[0]
 	report["value2"] = temps[1]
-	requests.post("https://maker.ifttt.com/trigger/PushNotif/with/key/A-bZYXN4teHcgT7H_vWYj", data=report)
+	requests.post("https://maker.ifttt.com/trigger/PushNotif/with/key/<Removed>", data=report)
 
 def file_error_sms(type):
 	if(type == 1):
